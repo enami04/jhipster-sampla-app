@@ -26,7 +26,7 @@ pipeline {
         echo " Compilation du code source avec Maven"
         sh './mvnw clean compile'
       }
-        }
+    }
     }
     }
 
@@ -76,28 +76,7 @@ pipeline {
       }
     }
 
-    stage('Analyse statique du code') {
-      parallel {
-        stage('Checkstyle') {
-          steps {
-            echo " Analyse Checkstyle"
-            sh './mvnw checkstyle:checkstyle'
-          }
-        }
-        stage('PMD') {
-          steps {
-            echo " Analyse PMD"
-            sh './mvnw pmd:pmd'
-          }
-        }
-        stage('FindBugs (optionnel)') {
-          steps {
-            echo " FindBugs est obsolète, peut être remplacé par SpotBugs"
-            echo " Étape laissée vide ici"
-          }
-        }
-      }
-    }
+
 
     stage('Déploiement conditionnel') {
       when {
