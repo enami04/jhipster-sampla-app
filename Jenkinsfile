@@ -20,18 +20,26 @@ pipeline {
     }
 
     stage('Build') {
+      parallel{
+        stage('Compilation avec Maven'){
       steps {
         echo " Compilation du code source avec Maven"
         sh './mvnw clean compile'
       }
+        }
+    }
     }
 
     stage('Test') {
+      parallel{
+        stage('JUnit'){
       steps {
         echo " Exécution des tests unitaires JUnit (rédigés par l'équipe)"
         sh './mvnw test'
         junit '**/target/surefire-reports/*.xml'
       }
+      }
+    }
     }
 
     stage('Jacoco Report') {
@@ -42,12 +50,16 @@ pipeline {
     }
 
     stage('Code Review et Historique') {
+      parallel{
+        stage('Intégration des PR'){
       steps {
         echo " Intégration des Pull Requests depuis les branches :"
         echo "→ feature/modif1, modif2, modif3, modif4"
         echo "→ Toutes mergées dans 'dev' via GitHub"
         sh 'git log --oneline -5'
       }
+    }
+    }
     }
 
     stage('Packaging') {
