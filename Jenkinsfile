@@ -17,7 +17,7 @@ pipeline {
         stage('Build') {
             steps {
                 // Compiler le projet avec Maven (commande pour Windows)
-                bat './mvnw clean compile'
+                bat 'mvn clean compile'
             }
         }
 
