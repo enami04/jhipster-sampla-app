@@ -9,7 +9,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Cloner le dépôt depuis GitHub (utilisation de la branche main)
-                git 'https://github.com/enami04/jhipster-sampla-app.git'
+               git branch: 'main', url: 'https://github.com/enami04/jhipster-sampla-app.git'
+
             }
         }
 
