@@ -15,7 +15,7 @@ pipeline {
             steps {
                 script {
                     // Clonage du dépôt et récupération des références Git (utilisation de git en mode batch)
-                    bat '''git fetch --tags --force --progress -- https://github.com/yasselab/jhipster-sampla-app/ +refs/heads/*:refs/remotes/origin/*'''
+                    bat '''git fetch --tags --force --progress -- https://github.com/enami04/jhipster-sampla-app/ +refs/heads/*:refs/remotes/origin/*'''
                 }
             }
         }
@@ -77,7 +77,7 @@ pipeline {
         failure {
             script {
                 // Envoi d'un email en cas d'échec
-                mail to: 'elabjani.yassmine@gmail.com',
+                mail to: 'ettobiimane@gmail.com',
                      subject: "Échec du build : ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
                      body: """Le pipeline a échoué à l’étape : ${env.STAGE_NAME}
                                Branche : ${env.BRANCH_NAME}
