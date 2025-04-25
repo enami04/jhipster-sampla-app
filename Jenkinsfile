@@ -2,88 +2,61 @@ pipeline {
     agent any
 
     environment {
-        MAVEN_HOME = tool 'Maven 3.9.3'  // Assure-toi que Maven 3.9.3 est configuré dans Jenkins
-    }
-
-    options {
-        skipStagesAfterUnstable()  // Ignore les étapes suivantes si le build devient instable
-        timestamps()  // Ajoute des horodatages à chaque étape du log
+        MAVEN_OPTS = "-Dmaven.test.failure.ignore=false"  // Permet d'ignorer les erreurs de test
     }
 
     stages {
-        stage('ScrutationSCM') {
+        stage('Checkout') {
             steps {
-                script {
-                    // Clonage du dépôt et récupération des références Git (utilisation de git en mode batch)
-                    bat '''git fetch --tags --force --progress -- https://github.com/enami04/jhipster-sampla-app/ +refs/heads/*:refs/remotes/origin/*'''
-                }
+                // Cloner le dépôt depuis GitHub (utilisation de la branche main)
+                git 'https://github.com/enami04/jhipster-sampla-app.git'
             }
         }
 
-        stage('Compilation avec Maven') {
+        stage('Build') {
             steps {
-                script {
-                    // Compilation avec Maven (commande batch)
-                    bat '''mvnw clean compile'''
-                }
+                // Compiler le projet avec Maven (commande pour Windows)
+                bat './mvnw clean compile'
             }
         }
 
-        stage('JUnit') {
+        stage('Test') {
             steps {
-                script {
-                    // Exécution des tests unitaires avec Maven (commande batch)
-                    bat '''mvnw test'''
-                    junit '**/target/surefire-reports/*.xml'  // Collecte les résultats des tests JUnit
-                }
+                // Exécution des tests unitaires avec Maven
+                bat './mvnw test'
             }
         }
 
-        stage('Jacoco Report') {
+        stage('JaCoCo Report') {
             steps {
-                script {
-                    // Exécution du rapport de couverture avec Jacoco (commande batch)
-                    bat '''mvnw jacoco:report'''
-                }
+                // Génération du rapport de couverture des tests avec JaCoCo
+                bat './mvnw jacoco:report'
             }
         }
 
-        stage('Intégration des PR') {
+        stage('Package') {
             steps {
-                script {
-                    // Affiche les derniers commits sur la branche (commande batch)
-                    bat '''git log --oneline -5'''
-                }
+                // Création du package JAR avec Maven
+                bat './mvnw package'
             }
         }
 
-        stage('Packaging') {
+        stage('Archive Artifacts') {
             steps {
-                script {
-                    // Création du fichier JAR (commande batch)
-                    bat '''mvnw package'''
-                }
+                // Archivage des artefacts générés (fichiers JAR)
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
     }
 
     post {
-        success {
-            script {
-                // Exécution après un succès
-                echo "Pipeline exécuté avec succès sur ${env.BRANCH_NAME}"
-            }
-        }
         failure {
-            script {
-                // Envoi d'un email en cas d'échec
-                mail to: 'ettobiimane@gmail.com',
-                     subject: "Échec du build : ${env.JOB_NAME} [${env.BUILD_NUMBER}]",
-                     body: """Le pipeline a échoué à l’étape : ${env.STAGE_NAME}
-                               Branche : ${env.BRANCH_NAME}
-                               Voir les logs ici : ${env.BUILD_URL}"""
-            }
+            // Envoi d'un email en cas d'échec du build
+            mail to: 'elabjani.yassmine@gmail.com',
+                 subject: ' Build Échoué - jhipster-sampla-app',
+                 body: "Le build du projet jhipster-sampla-app a échoué. Veuillez consulter Jenkins pour plus de détails."
         }
     }
 }
+
 
