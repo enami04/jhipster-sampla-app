@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         MAVEN_OPTS = "-Dmaven.test.failure.ignore=false"  // Permet d'ignorer les erreurs de test
-        MAVEN_HOME = tool 'Maven 3.9.3'
+        
     }
 
     stages {
