@@ -23,7 +23,7 @@ pipeline {
               //bat 'cmd /c mvnw.cmd clean compile'  // Utilisez cette commande au lieu de './mvnw.cmd'
               //bat 'mvnw clean compile'
               //bat '''mvnw clean compile'''
-              call mvnw clean compile
+              call mvnw.cmd clean compile
 
               
 
