@@ -17,7 +17,8 @@ pipeline {
             steps {
                 // Compiler le projet avec Maven (commande pour Windows)
                 //bat 'cmd /c mvnw.cmd clean compile'  // Utilisation de mvnw.cmd au lieu de mvnw
-                bat './mvnw clean compile'
+                //bat './mvnw clean compile'
+                bat './mvnw.cmd clean compile'  // Utilisation du chemin relatif
 
              
             }
