@@ -22,7 +22,8 @@ pipeline {
                 //bat './mvnw.cmd clean compile'  // Utilisation du chemin relatif
               //bat 'cmd /c mvnw.cmd clean compile'  // Utilisez cette commande au lieu de './mvnw.cmd'
               //bat 'mvnw clean compile'
-              bat 'D:/JenkinsData/workspace/pipeline100/mvnw clean compile'
+              bat '''mvnw clean compile'''
+
 
 
 
