@@ -17,8 +17,9 @@ pipeline {
             steps {
                 // Compiler le projet avec Maven (commande pour Windows)
                 //bat 'cmd /c mvnw.cmd clean compile'  // Utilisation de mvnw.cmd au lieu de mvnw
-              bat '"D:/JenkinsData/workspace/pipeline100/mvnw.cmd" clean compile'
+                bat './mvnw clean compile'
 
+             
             }
         }
 
