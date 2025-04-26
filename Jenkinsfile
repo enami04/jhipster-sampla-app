@@ -9,38 +9,35 @@ pipeline {
         stage('Checkout') {
             steps {
                 // Cloner le dépôt depuis GitHub (utilisation de la branche main)
-               git branch: 'main', url: 'https://github.com/enami04/jhipster-sampla-app.git'
-
+                git branch: 'main', url: 'https://github.com/enami04/jhipster-sampla-app.git'
             }
         }
 
         stage('Build') {
             steps {
                 // Compiler le projet avec Maven (commande pour Windows)
-              bat 'cmd /c mvnw.cmd clean compile'
-
-                //bat 'mvnw.cmd clean compile'
+                bat 'cmd /c mvnw.cmd clean compile'  // Utilisation de mvnw.cmd au lieu de mvnw
             }
         }
 
         stage('Test') {
             steps {
                 // Exécution des tests unitaires avec Maven
-                bat './mvnw test'
+                bat 'cmd /c mvnw.cmd test'  // Assurez-vous d'utiliser la commande correcte pour Windows
             }
         }
 
         stage('JaCoCo Report') {
             steps {
                 // Génération du rapport de couverture des tests avec JaCoCo
-                bat './mvnw jacoco:report'
+                bat 'cmd /c mvnw.cmd jacoco:report'
             }
         }
 
         stage('Package') {
             steps {
                 // Création du package JAR avec Maven
-                bat './mvnw package'
+                bat 'cmd /c mvnw.cmd package'
             }
         }
 
@@ -61,5 +58,6 @@ pipeline {
         }
     }
 }
+
 
 
