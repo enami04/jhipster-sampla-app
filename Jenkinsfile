@@ -1,79 +1,50 @@
 pipeline {
-    agent any
-
-    environment {
-        MAVEN_OPTS = "-Dmaven.test.failure.ignore=false"  // Permet d'ignorer les erreurs de test
-        
+  agent any
+  stages {
+    stage('Checkout') {
+      steps {
+        git(branch: 'main', url: 'https://github.com/enami04/jhipster-sampla-app.git')
+      }
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                // Cloner le dépôt depuis GitHub (utilisation de la branche main)
-                git branch: 'main', url: 'https://github.com/enami04/jhipster-sampla-app.git'
-            }
-        }
-
-        stage('Build') {
-            steps {
-                // Compiler le projet avec Maven (commande pour Windows)
-                //bat 'cmd /c mvnw.cmd clean compile'  // Utilisation de mvnw.cmd au lieu de mvnw
-                //bat './mvnw clean compile'
-                bat './mvnw.cmd clean compile'  // Utilisation du chemin relatif
-              //bat 'cmd /c mvnw.cmd clean compile'  // Utilisez cette commande au lieu de './mvnw.cmd'
-              //bat 'mvnw clean compile'
-              //bat '''mvnw clean compile'''
-              //call mvnw.cmd clean compile
-
-              
-
-
-
-
-
-
-             
-            }
-        }
-
-        stage('Test') {
-            steps {
-                // Exécution des tests unitaires avec Maven
-                bat 'cmd /c mvnw.cmd test'  // Assurez-vous d'utiliser la commande correcte pour Windows
-            }
-        }
-
-        stage('JaCoCo Report') {
-            steps {
-                // Génération du rapport de couverture des tests avec JaCoCo
-                bat 'cmd /c mvnw.cmd jacoco:report'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                // Création du package JAR avec Maven
-                bat 'cmd /c mvnw.cmd package'
-            }
-        }
-
-        stage('Archive Artifacts') {
-            steps {
-                // Archivage des artefacts générés (fichiers JAR)
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-            }
-        }
+    stage('Build') {
+      steps {
+        bat './mvnw clean compile'
+      }
     }
 
-    post {
-        failure {
-            // Envoi d'un email en cas d'échec du build
-            mail to: 'elabjani.yassmine@gmail.com',
-                 subject: ' Build Échoué - jhipster-sampla-app',
-                 body: "Le build du projet jhipster-sampla-app a échoué. Veuillez consulter Jenkins pour plus de détails."
-        }
+    stage('Test') {
+      steps {
+        bat './mvnw test'
+      }
     }
+
+    stage('JaCoCo Report') {
+      steps {
+        bat 'cmd /c mvnw.cmd jacoco:report'
+      }
+    }
+
+    stage('Package') {
+      steps {
+        bat 'cmd /c mvnw.cmd package'
+      }
+    }
+
+    stage('Archive Artifacts') {
+      steps {
+        archiveArtifacts(artifacts: 'target/*.jar', fingerprint: true)
+      }
+    }
+
+  }
+  environment {
+    MAVEN_OPTS = '-Dmaven.test.failure.ignore=false'
+  }
+  post {
+    failure {
+      mail(to: 'elabjani.yassmine@gmail.com', subject: ' Build Échoué - jhipster-sampla-app', body: 'Le build du projet jhipster-sampla-app a échoué. Veuillez consulter Jenkins pour plus de détails.')
+    }
+
+  }
 }
-
-
-
